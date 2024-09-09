@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trust Checker Test</title>
+</head>
+<body>
+    <h1>Trust Checker Test</h1>
+    <textarea id="pageContent" rows="10" cols="50" placeholder="Paste page content here"></textarea>
+    <br>
+    <button id="checkContent">Check Content</button>
+    <div id="result"></div>
+
+    <script src="test.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const button = document.createElement('button');
+        button.textContent = 'Analyze Page';
+        button.onclick = analyzePage;
+        document.body.appendChild(button);
+
+        const resultDiv = document.createElement('div');
+        resultDiv.id = 'result';
+        document.body.appendChild(resultDiv);
+    });
+
+    function analyzePage() {
+        const pageContent = document.body.innerText;
+        fetch('http://localhost:3000/analyze', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content: pageContent }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+    </script>
+</body>
+</html>
